@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para o Meu Amor ❤️</title>
+    <!-- Tailwind CSS para um design moderno e elegante -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons para ícones delicados e românticos -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5) rotate(360deg); opacity: 0; }
+        }
+        .heart-particle {
+            position: fixed;
+            bottom: -10%;
+            color: rgba(244, 63, 94, 0.4);
+            animation: float linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .flip-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 4s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-rose-50 via-pink-50 to-rose-100 min-h-screen overflow-x-hidden relative pb-24 text-slate-800">
+
+    <!-- Chuva de corações em segundo plano -->
+    <div id="heart-container" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- CONFIGURAÇÕES RÁPIDAS (Pode alterar estes valores para personalizar o site!) -->
+    <script>
+        const CONFIG = {
+            nomeDela: "Meu Amor ❤️",        // Nome ou apelido dela
+            seuNome: "Seu Nome",          // Seu nome ou apelido
+            // Data de início (Ano, Mês-1, Dia, Hora, Minuto).
+            dataInicio: new Date(2026, 4, 2, 14, 0, 0), 
+            musicaUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" // Link do áudio de fundo
+        };
+    </script>
+
+    <!-- TELA DE ABERTURA -->
+    <div id="welcome-screen" class="fixed inset-0 bg-rose-50 flex flex-col items-center justify-center p-4 z-50">
+        <div class="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl text-center max-w-md w-full border border-rose-100 animate-pulse-slow">
+            <i data-lucide="heart" class="mx-auto text-rose-500 fill-current w-16 h-16 mb-6 animate-bounce"></i>
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-3 font-serif">Uma surpresa para ti...</h1>
+            <p class="text-slate-500 mb-8 text-sm md:text-base">Preparei um espaço especial para nós dois para comemorar as nossas conversas. Vamos entrar?</p>
+            <button onclick="startApp()" class="bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold py-4 px-8 rounded-full shadow-xl hover:shadow-rose-300 hover:scale-105 transition-all w-full text-lg flex items-center justify-center gap-2">
+                Abrir com Amor <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Áudio de Fundo -->
+    <audio id="bg-music" loop></audio>
+
+    <!-- Controle de Áudio Flutuante -->
+    <button onclick="toggleMusic()" class="fixed bottom-6 right-6 z-50 bg-white p-4 rounded-full shadow-2xl text-rose-500 hover:scale-110 transition-transform border-2 border-rose-100 flex items-center justify-center gap-2 group shadow-rose-200">
+        <i id="music-icon" data-lucide="volume-x" class="w-6 h-6"></i>
+    </button>
+
+    <!-- CONTEÚDO PRINCIPAL (Fica oculto até clicar em abrir) -->
+    <div id="main-content" class="hidden">
+        
+        <!-- CABEÇALHO -->
+        <header class="min-h-screen flex flex-col items-center justify-center text-center p-4 relative z-10">
+            <div class="bg-white/40 p-6 md:p-8 rounded-full backdrop-blur-sm border border-white mb-8">
+                <div class="w-36 h-36 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-rose-400 shadow-2xl p-1 bg-white mx-auto">
+                    <!-- Imagem fofa representativa de carinho e conexão -->
+                    <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Conexão e amor" class="w-full h-full object-cover rounded-full">
+                </div>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-pink-500 mb-4 font-serif">
+                Olá, <span id="header-nome-dela">Linda</span>!
+            </h1>
+            <p class="text-lg md:text-xl text-slate-700 max-w-xl font-light px-4 leading-relaxed">
+                Escrevi cada linha deste site para comemorar os nossos <strong>2 meses de conversas diárias</strong> e planejar tudo o que ainda vamos viver juntos.
+            </p>
+
+            <!-- CONTADOR DE TEMPO INTERATIVO -->
+            <div class="mt-12 bg-white/80 backdrop-blur-md py-6 px-8 rounded-3xl shadow-xl border border-rose-100 max-w-lg w-full mx-auto">
+                <h3 class="text-rose-500 font-bold text-sm tracking-widest uppercase mb-4 flex items-center justify-center gap-2">
+                    <i data-lucide="clock" class="w-4 h-4"></i> Tempo de Conexão
+                </h3>
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div class="bg-rose-50/50 p-2 rounded-xl">
+                        <span id="timer-days" class="text-2xl md:text-3xl font-extrabold text-rose-600 block">00</span>
+                        <span class="text-xs text-slate-500 uppercase font-semibold">Dias</span>
+                    </div>
+                    <div class="bg-rose-50/50 p-2 rounded-xl">
+                        <span id="timer-hours" class="text-2xl md:text-3xl font-extrabold text-rose-600 block">00</span>
+                        <span class="text-xs text-slate-500 uppercase font-semibold">Horas</span>
+                    </div>
+                    <div class="bg-rose-50/50 p-2 rounded-xl">
+                        <span id="timer-minutes" class="text-2xl md:text-3xl font-extrabold text-rose-600 block">00</span>
+                        <span class="text-xs text-slate-500 uppercase font-semibold">Min</span>
+                    </div>
+                    <div class="bg-rose-50/50 p-2 rounded-xl">
+                        <span id="timer-seconds" class="text-2xl md:text-3xl font-extrabold text-rose-600 block">00</span>
+                        <span class="text-xs text-slate-500 uppercase font-semibold">Seg</span>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-400 mt-3">Segundos que se tornaram momentos favoritos.</p>
+            </div>
+            
+            <div class="absolute bottom-10 animate-bounce text-rose-400 flex flex-col items-center">
+                <span class="text-xs font-semibold tracking-widest uppercase mb-1">Deslize para baixo</span>
+                <i data-lucide="chevron-down" class="w-6 h-6"></i>
+            </div>
+        </header>
+
+        <!-- SEÇÕES PRINCIPAIS -->
+        <main class="space-y-24">
+            
+            <!-- LINHA DO TEMPO -->
+            <section class="max-w-2xl mx-auto relative z-10 px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-rose-600 mb-12 flex items-center justify-center gap-3 font-serif">
+                    <i data-lucide="calendar-heart" class="w-9 h-9"></i> Nossa Linha do Tempo
+                </h2>
+                <div class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-rose-300 before:to-transparent">
+                    
+                    <!-- Evento 1 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-rose-400 text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-lg z-10">
+                            <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-xl hover:scale-105 transition-transform duration-300 border border-rose-100">
+                            <span class="text-xs font-bold uppercase tracking-wider text-rose-400">Há 2 meses</span>
+                            <h3 class="font-bold text-slate-800 text-lg mt-1 mb-2">A Primeira Conversa</h3>
+                            <p class="text-slate-600 leading-relaxed text-sm">O início de tudo. Uma notificação simples que, sem que eu soubesse, se transformaria na melhor rotina da minha vida.</p>
+                        </div>
+                    </div>
+
+                    <!-- Evento 2 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-rose-400 text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-lg z-10">
+                            <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-xl hover:scale-105 transition-transform duration-300 border border-rose-100">
+                            <span class="text-xs font-bold uppercase tracking-wider text-rose-400">Semanas seguintes</span>
+                            <h3 class="font-bold text-slate-800 text-lg mt-1 mb-2">As Madrugadas Acordados</h3>
+                            <p class="text-slate-600 leading-relaxed text-sm">Conversas intermináveis sobre os assuntos mais aleatórios do mundo. Descobrir você foi como encontrar um lar.</p>
+                        </div>
+                    </div>
+
+                    <!-- Evento 3 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-rose-400 text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-lg z-10">
+                            <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-xl hover:scale-105 transition-transform duration-300 border border-rose-100">
+                            <span class="text-xs font-bold uppercase tracking-wider text-rose-400">O Sentimento Crescendo</span>
+                            <h3 class="font-bold text-slate-800 text-lg mt-1 mb-2">Mais que Amigos</h3>
+                            <p class="text-slate-600 leading-relaxed text-sm">A percepção de que a cada "bom dia" meu coração dava um pulo e que o seu sorriso passou a guiar o meu dia inteiro.</p>
+                        </div>
+                    </div>
+
+                    <!-- Evento 4 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-rose-400 text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-lg z-10">
+                            <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-xl hover:scale-105 transition-transform duration-300 border border-rose-100">
+                            <span class="text-xs font-bold uppercase tracking-wider text-rose-400">Os Próximos Capítulos</span>
+                            <h3 class="font-bold text-slate-800 text-lg mt-1 mb-2">Ansiedades Boas</h3>
+                            <p class="text-slate-600 leading-relaxed text-sm">O primeiro abraço de verdade, o nosso primeiro beijo, a entrega oficial da aliança e aquele papo super respeitoso com a sua mãe.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- EXPECTATIVAS & IMAGENS -->
+            <section class="max-w-3xl mx-auto px-4 z-10 relative text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-rose-600 mb-4 flex items-center justify-center gap-3 font-serif">
+                    <i data-lucide="image" class="w-9 h-9"></i> Nossa Galeria Futura
+                </h2>
+                <p class="text-slate-600 mb-8 max-w-lg mx-auto text-sm">
+                    Ainda estamos a construir o nosso próprio álbum físico de fotos, mas vê as imagens que representam exatamente o que planeio viver contigo:
+                </p>
+                <div class="relative rounded-[2rem] overflow-hidden shadow-2xl bg-white p-3 border border-rose-100 max-w-xl mx-auto">
+                    <div class="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center">
+                        <img id="gallery-img" src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Momentos felizes" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/45 flex items-end justify-center p-6">
+                            <p id="gallery-caption" class="text-white font-medium text-sm md:text-base max-w-md drop-shadow-md italic">
+                                "Mesmo sem fotos oficiais ainda, no meu pensamento já temos mil registros felizes juntos."
+                            </p>
+                        </div>
+                        <div class="absolute inset-x-2 top-1/2 -translate-y-1/2 flex justify-between">
+                            <button onclick="prevPhoto()" class="p-2 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full text-white transition-all transform hover:scale-115">
+                                <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                            </button>
+                            <button onclick="nextPhoto()" class="p-2 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full text-white transition-all transform hover:scale-115">
+                                <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CAIXINHA DE RECADOS ALEATÓRIOS -->
+            <section class="max-w-xl mx-auto px-4 z-10 relative">
+                <div class="bg-gradient-to-br from-white to-pink-50/50 p-8 rounded-[2rem] shadow-xl border border-rose-100 text-center">
+                    <i data-lucide="message-circle-heart" class="mx-auto text-rose-500 w-10 h-10 mb-4 animate-bounce"></i>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 font-serif">Um recado para cada sorriso</h3>
+                    <p class="text-sm text-slate-500 mb-6">Clica no botão abaixo para gerar uma mensagem carinhosa nova no ecrã!</p>
+                    <div class="bg-white p-5 rounded-2xl border border-rose-100 min-h-[90px] flex items-center justify-center mb-6">
+                        <p id="random-note" class="text-rose-600 font-medium text-base md:text-lg text-center">
+                            Você é o detalhe mais bonito dos meus últimos dois meses! 🥰
+                        </p>
+                    </div>
+                    <button onclick="generateNote()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold py-2.5 px-6 rounded-full text-sm transition-all shadow-sm flex items-center gap-2 mx-auto">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i> Obter outro recado
+                    </button>
+                </div>
+            </section>
+
+            <!-- O QUE ME ENCANTA (CARTÕES QUE VIRAM) -->
+            <section class="max-w-5xl mx-auto px-4 z-10 relative">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-rose-600 mb-4 flex items-center justify-center gap-3 font-serif">
+                    <i data-lucide="sparkles" class="w-9 h-9"></i> Detalhes que Me Encantam
+                </h2>
+                <p class="text-center text-slate-600 mb-10 max-w-md mx-auto text-sm">
+                    Mesmo nos conhecendo há apenas 2 meses, já descobri coisas incríveis em você. Passe o mouse ou toque nos cartões para revelar:
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    
+                    <!-- Card 1 -->
+                    <div class="flip-card h-44 w-full perspective-1000 bg-transparent cursor-pointer">
+                        <div class="flip-card-inner relative w-full h-full text-center shadow-md rounded-2xl">
+                            <div class="flip-card-front absolute w-full h-full flex flex-col justify-center items-center bg-white border-2 border-rose-100 rounded-2xl text-rose-500 p-4">
+                                <i data-lucide="heart" class="mb-2 text-rose-400 fill-current w-7 h-7"></i>
+                                <h3 class="font-bold text-base md:text-lg text-slate-800">Seu "Bom Dia"</h3>
+                                <p class="text-xs mt-3 text-rose-300">Toque para ver ❤️</p>
+                            </div>
+                            <div class="flip-card-back absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-rose-400 to-pink-500 text-white rounded-2xl p-6">
+                                <p class="text-sm md:text-base font-medium leading-relaxed">Saber que sou uma das suas prioridades do dia muda completamente o meu humor e as minhas manhãs.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="flip-card h-44 w-full perspective-1000 bg-transparent cursor-pointer">
+                        <div class="flip-card-inner relative w-full h-full text-center shadow-md rounded-2xl">
+                            <div class="flip-card-front absolute w-full h-full flex flex-col justify-center items-center bg-white border-2 border-rose-100 rounded-2xl text-rose-500 p-4">
+                                <i data-lucide="heart" class="mb-2 text-rose-400 fill-current w-7 h-7"></i>
+                                <h3 class="font-bold text-base md:text-lg text-slate-800">Nossa Sintonia</h3>
+                                <p class="text-xs mt-3 text-rose-300">Toque para ver ❤️</p>
+                            </div>
+                            <div class="flip-card-back absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-rose-400 to-pink-500 text-white rounded-2xl p-6">
+                                <p class="text-sm md:text-base font-medium leading-relaxed">A facilidade com que conversamos sobre tudo. Parece que nos conhecemos há anos inteiros!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="flip-card h-44 w-full perspective-1000 bg-transparent cursor-pointer">
+                        <div class="flip-card-inner relative w-full h-full text-center shadow-md rounded-2xl">
+                            <div class="flip-card-front absolute w-full h-full flex flex-col justify-center items-center bg-white border-2 border-rose-100 rounded-2xl text-rose-500 p-4">
+                                <i data-lucide="heart" class="mb-2 text-rose-400 fill-current w-7 h-7"></i>
+                                <h3 class="font-bold text-base md:text-lg text-slate-800">Seu Carinho</h3>
+                                <p class="text-xs mt-3 text-rose-300">Toque para ver ❤️</p>
+                            </div>
+                            <div class="flip-card-back absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-rose-400 to-pink-500 text-white rounded-2xl p-6">
+                                <p class="text-sm md:text-base font-medium leading-relaxed">Sua doçura ao falar comigo e como você demonstra se importar com cada pequeno detalhe meu.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="flip-card h-44 w-full perspective-1000 bg-transparent cursor-pointer">
+                        <div class="flip-card-inner relative w-full h-full text-center shadow-md rounded-2xl">
+                            <div class="flip-card-front absolute w-full h-full flex flex-col justify-center items-center bg-white border-2 border-rose-100 rounded-2xl text-rose-500 p-4">
+                                <i data-lucide="heart" class="mb-2 text-rose-400 fill-current w-7 h-7"></i>
+                                <h3 class="font-bold text-base md:text-lg text-slate-800">O Frio na Barriga</h3>
+                                <p class="text-xs mt-3 text-rose-300">Toque para ver ❤️</p>
+                            </div>
+                            <div class="flip-card-back absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-rose-400 to-pink-500 text-white rounded-2xl p-6">
+                                <p class="text-sm md:text-base font-medium leading-relaxed">A sensação indescritível de ver o seu nome brilhando na tela do meu celular e o coração acelerar.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="flip-card h-44 w-full perspective-1000 bg-transparent cursor-pointer">
+                        <div class="flip-card-inner relative w-full h-full text-center shadow-md rounded-2xl">
+                            <div class="flip-card-front absolute w-full h-full flex flex-col justify-center items-center bg-white border-2 border-rose-100 rounded-2xl text-rose-500 p-4">
+                                <i data-lucide="heart" class="mb-2 text-rose-400 fill-current w-7 h-7"></i>
+                                <h3 class="font-bold text-base md:text-lg text-slate-800">Seu Apoio</h3>
+                                <p class="text-xs mt-3 text-rose-300">Toque para ver ❤️</p>
+                            </div>
+                            <div class="flip-card-back absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-rose-400 to-pink-500 text-white rounded-2xl p-6">
+                                <p class="text-sm md:text-base font-medium leading-relaxed">A forma como você me ouve, apoia os meus planos e celebra cada detalhe positivo comigo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 (Apoio e Espaço) -->
+                    <div class="flip-card h-44 w-full perspective-1000 bg-transparent cursor-pointer">
+                        <div class="flip-card-inner relative w-full h-full text-center shadow-md rounded-2xl">
+                            <div class="flip-card-front absolute w-full h-full flex flex-col justify-center items-center bg-white border-2 border-rose-100 rounded-2xl text-rose-500 p-4">
+                                <i data-lucide="shield-check" class="mb-2 text-rose-400 fill-current w-7 h-7"></i>
+                                <h3 class="font-bold text-base md:text-lg text-slate-800">Seu Tempo</h3>
+                                <p class="text-xs mt-3 text-rose-300">Toque para ver ❤️</p>
+                            </div>
+                            <div class="flip-card-back absolute w-full h-full flex justify-center items-center bg-gradient-to-br from-rose-400 to-pink-500 text-white rounded-2xl p-6">
+                                <p class="text-sm md:text-base font-medium leading-relaxed">Respeito muito o seu ritmo e o seu espaço. Quero que você se sinta totalmente protegida, segura e amada ao meu lado, sem pressa.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- CARTA DE AMOR -->
+            <section class="max-w-3xl mx-auto px-4 z-10 relative">
+                <div class="bg-white/95 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-2xl border-t-8 border-rose-500 relative">
+                    <i data-lucide="heart" class="absolute -top-8 left-1/2 -translate-x-1/2 text-rose-500 fill-current w-16 h-16 bg-rose-50 rounded-full p-2 shadow-lg"></i>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-6 text-center mt-4 font-serif">Para o meu Amor ❤️,</h2>
+                    <div class="space-y-4 text-slate-700 text-base md:text-lg leading-relaxed font-sans">
+                        <p>Faz cerca de dois meses que você entrou na minha vida e, de verdade, tudo ficou muito mais alegre desde então. Quem diria que uma conversa simples se transformaria na melhor parte de todos os meus dias?</p>
+                        <p>Quero que você saiba que, além de namorado, eu quero ser o seu lugar seguro no mundo inteiro. Sei que existem dias mais cinzentos ou difíceis, e o meu único objetivo de verdade é estar lá para te apoiar, te ouvir e respeitar sempre o seu tempo, o seu ritmo e o seu espaço. Não tenho nenhuma pressa, pois sei que o que estamos construindo é lindo e verdadeiro.</p>
+                        <p>Eu fico imaginando o dia em que vou finalmente te ver, te dar aquele abraço bem aconchegante, conversar com a sua mãe (prometo que vou me esforçar para não ficar gaguejando de nervoso! rs), segurar a sua mão e dar o nosso primeiro passo com calma.</p>
+                        <p>Quero construir uma história de muito carinho, respeito mútuo, diversão e cumplicidade com você. Obrigado por ser essa pessoa tão incrível nesses últimos 2 meses. Esse é apenas o primeiro capítulo da nossa história.</p>
+                        <p class="font-bold text-rose-600 text-right mt-8 text-xl">Com todo o meu carinho,</p>
+                        <p id="signature-text" class="text-right text-slate-800 font-bold text-xl italic">[Seu Nome Aqui]</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PEDIDO DE NAMORO INTERATIVO -->
+            <section class="max-w-md mx-auto px-4 z-10 relative">
+                <div id="proposal-box" class="bg-gradient-to-br from-white to-rose-50 p-8 rounded-[2.5rem] shadow-2xl border-2 border-rose-100 text-center relative overflow-hidden">
+                    <div id="proposal-active">
+                        <i data-lucide="gift" class="mx-auto text-rose-500 animate-bounce w-12 h-12 mb-4"></i>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2 font-serif">Uma perguntinha importante...</h2>
+                        <p class="text-slate-600 text-sm md:text-base mb-8">
+                            Sei que ainda temos o abraço para dar, o beijo para dar e o papo com a sua mãe... mas já queria ensaiar o passo principal:
+                        </p>
+                        <p class="text-xl md:text-2xl font-extrabold text-rose-600 mb-8 leading-snug">
+                            Você aceita namorar comigo quando a aliança chegar? 🥰
+                        </p>
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 relative min-h-[120px]">
+                            <button onclick="acceptProposal()" class="bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-transform text-lg z-10">
+                                Sim! Mil vezes sim! 💍
+                            </button>
+                            <button id="btn-no" onmouseenter="moveNoBtn()" onclick="moveNoBtn()" class="bg-slate-200 text-slate-600 font-semibold py-2 px-6 rounded-full text-sm hover:bg-slate-300 absolute sm:static transition-all duration-150">
+                                Não...
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="proposal-accepted" class="hidden">
+                        <i data-lucide="heart" class="mx-auto text-rose-500 fill-current animate-pulse w-16 h-16 mb-4"></i>
+                        <h2 class="text-3xl font-bold text-rose-600 mb-4 font-serif">Ebaaaa! ❤️</h2>
+                        <p class="text-slate-700 font-medium text-lg mb-6">Você acabou de me deixar com o maior sorriso do mundo!</p>
+                        <p class="text-slate-500 text-sm leading-relaxed">
+                            Considere isso como nossa "promessa" oficial firmada. Agora deixa comigo que eu cuido de comprar as alianças mais lindas, preparar o pedido presencial e todo o resto do nosso plano! 🥰
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- RODAPÉ -->
+        <footer class="bg-rose-500 text-white text-center py-6 mt-16 relative z-10">
+            <p id="footer-text" class="flex items-center justify-center gap-2 text-sm font-medium">
+                Feito com carinho para [Nome dela aqui]
+            </p>
+        </footer>
+    </div>
+
+    <!-- SCRIPT DE LÓGICA E INTERAÇÕES -->
+    <script>
+        // Inicializa os ícones do Lucide
+        lucide.createIcons();
+
+        // 1. Aplica as variáveis de configuração rápida nos elementos visuais do site
+        document.getElementById('header-nome-dela').innerText = CONFIG.nomeDela;
+        document.getElementById('signature-text').innerText = CONFIG.seuNome;
+        document.getElementById('footer-text').innerText = `Feito com carinho para ${CONFIG.nomeDela}`;
+
+        // 2. Criar corações flutuantes decorativos no fundo
+        const container = document.getElementById('heart-container');
+        for (let i = 0; i < 25; i++) {
+            const heart = document.createElement('div');
+            heart.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+            heart.className = 'heart-particle';
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.animationDuration = `${Math.random() * 8 + 6}s`;
+            heart.style.animationDelay = `${Math.random() * 6}s`;
+            heart.style.width = `${Math.random() * 20 + 10}px`;
+            container.appendChild(heart);
+        }
+
+        // 3. Controle e reprodução de som segura contra rejeições não tratadas do navegador
+        const audio = document.getElementById('bg-music');
+        let isPlaying = false;
+
+        // Inicialização preventiva da origem do áudio para evitar erros de elemento sem fonte suportada
+        if (CONFIG.musicaUrl) {
+            audio.src = CONFIG.musicaUrl;
+            audio.load();
+        }
+
+        // Trata erros de carregamento do ficheiro de áudio de forma silenciosa e amigável
+        audio.addEventListener('error', function(e) {
+            console.warn("Ficheiro de áudio não suportado ou bloqueado temporariamente:", e);
+        });
+
+        function toggleMusic() {
+            const icon = document.getElementById('music-icon');
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                icon.setAttribute('data-lucide', 'volume-x');
+                icon.classList.remove('animate-pulse');
+                lucide.createIcons();
+            } else {
+                // Executa a reprodução garantindo sincronização do estado apenas sob sucesso
+                audio.play().then(() => {
+                    isPlaying = true;
+                    icon.setAttribute('data-lucide', 'volume-2');
+                    icon.classList.add('animate-pulse');
+                    lucide.createIcons();
+                }).catch(err => {
+                    console.warn("Reprodução de áudio impedida ou falhou:", err);
+                    isPlaying = false;
+                    icon.setAttribute('data-lucide', 'volume-x');
+                    icon.classList.remove('animate-pulse');
+                    lucide.createIcons();
+                });
+            }
+        }
+
+        // 4. Iniciar App na tela de boas-vindas
+        function startApp() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('main-content').classList.remove('hidden');
+            
+            // Inicia o contador de tempo regressivo/progressivo
+            setInterval(updateTimer, 1000);
+            updateTimer();
+
+            // Executa a reprodução inicial de forma totalmente segura
+            if (CONFIG.musicaUrl) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    const icon = document.getElementById('music-icon');
+                    if (icon) {
+                        icon.setAttribute('data-lucide', 'volume-2');
+                        icon.classList.add('animate-pulse');
+                        lucide.createIcons();
+                    }
+                }).catch(err => {
+                    console.warn("A reprodução automática de áudio foi impedida pelo navegador:", err);
+                    isPlaying = false;
+                });
+            }
+        }
+
+        // 5. Atualização em tempo real do contador de relacionamento
+        function updateTimer() {
+            const diff = new Date() - CONFIG.dataInicio;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('timer-days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('timer-hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('timer-minutes').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('timer-seconds').innerText = seconds.toString().padStart(2, '0');
+        }
+
+        // 6. Lista de recados fofos aleatórios para o mural interativo
+        const cuteNotes = [
+            "Você é o detalhe mais bonito dos meus últimos dois meses! 🥰",
+            "Não vejo a hora de te dar aquele abraço bem aconchegante e te fazer sorrir. 🤗",
+            "Obrigado por deixar minhas conversas tão leves e o meu dia tão especial.",
+            "Nos dias cinzentos, eu vou estar aqui bem pertinho, segurando a sua mão e te ouvindo. ❤️",
+            "Seu tempo é o meu tempo. Não tenho pressa de nada, só tenho pressa de te ver bem.",
+            "Quero ser o seu porto seguro, o lugar onde você pode descansar e sorrir sem nenhum receio. 🛡️✨",
+            "Prometo escolher as alianças mais fofas desse mundo para nós dois. 💍",
+            "Seu sorriso é simplesmente a coisa mais preciosa de todas! 😍",
+            "Sinto que esses 2 meses são só as primeiras páginas da nossa linda história com calma e respeito."
+        ];
+        
+        let lastNoteIndex = 0;
+        function generateNote() {
+            let nextIndex;
+            do {
+                nextIndex = Math.floor(Math.random() * cuteNotes.length);
+            } while (nextIndex === lastNoteIndex);
+            
+            lastNoteIndex = nextIndex;
+            const noteEl = document.getElementById('random-note');
+            noteEl.style.opacity = 0;
+            setTimeout(() => {
+                noteEl.innerText = cuteNotes[lastNoteIndex];
+                noteEl.style.opacity = 1;
+            }, 150);
+        }
+
+        // 7. Lógica da galeria de fotos representativa
+        const photos = [
+            {
+                url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                caption: "Mesmo sem fotos oficiais ainda, no meu pensamento já temos mil registros felizes juntos."
+            },
+            {
+                url: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                caption: "Mal posso esperar pelo dia em que tiraremos nossa primeira foto oficial de namorados!"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                caption: "Cada detalhe que conheço de você me faz querer viver cada novo capítulo do nosso futuro."
+            }
+        ];
+        let currentPhotoIndex = 0;
+
+        function updateGallery() {
+            document.getElementById('gallery-img').src = photos[currentPhotoIndex].url;
+            document.getElementById('gallery-caption').innerText = `"${photos[currentPhotoIndex].caption}"`;
+        }
+        function nextPhoto() {
+            currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+            updateGallery();
+        }
+        function prevPhoto() {
+            currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+            updateGallery();
+        }
+
+        // 8. Lógica divertida para desviar e fugir do botão "Não"
+        let attempts = 0;
+        function moveNoBtn() {
+            const btn = document.getElementById('btn-no');
+            const randomX = Math.random() * 220 - 110;
+            const randomY = Math.random() * 140 - 70;
+            btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            
+            attempts++;
+            if (attempts > 3) {
+                btn.innerText = "Sem trapacear! 😂";
+            }
+        }
+
+        function acceptProposal() {
+            document.getElementById('proposal-active').classList.add('hidden');
+            document.getElementById('proposal-accepted').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
