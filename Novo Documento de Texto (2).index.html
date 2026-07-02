@@ -427,6 +427,12 @@
         const audio = document.getElementById('bg-music');
         let isPlaying = false;
 
+        // Inicialização preventiva da origem do áudio para evitar erros de elemento sem fonte suportada
+        if (CONFIG.musicaUrl) {
+            audio.src = CONFIG.musicaUrl;
+            audio.load();
+        }
+
         // Trata erros de carregamento do ficheiro de áudio de forma silenciosa e amigável
         audio.addEventListener('error', function(e) {
             console.warn("Ficheiro de áudio não suportado ou bloqueado temporariamente:", e);
@@ -436,20 +442,25 @@
             const icon = document.getElementById('music-icon');
             if (isPlaying) {
                 audio.pause();
+                isPlaying = false;
                 icon.setAttribute('data-lucide', 'volume-x');
                 icon.classList.remove('animate-pulse');
+                lucide.createIcons();
             } else {
-                // Executa a reprodução capturando eventuais erros de fontes não suportadas
+                // Executa a reprodução garantindo sincronização do estado apenas sob sucesso
                 audio.play().then(() => {
+                    isPlaying = true;
                     icon.setAttribute('data-lucide', 'volume-2');
                     icon.classList.add('animate-pulse');
                     lucide.createIcons();
                 }).catch(err => {
-                    console.log("Erro na reprodução de áudio:", err);
+                    console.warn("Reprodução de áudio impedida ou falhou:", err);
+                    isPlaying = false;
+                    icon.setAttribute('data-lucide', 'volume-x');
+                    icon.classList.remove('animate-pulse');
+                    lucide.createIcons();
                 });
             }
-            isPlaying = !isPlaying;
-            lucide.createIcons();
         }
 
         // 4. Iniciar App na tela de boas-vindas
@@ -461,10 +472,8 @@
             setInterval(updateTimer, 1000);
             updateTimer();
 
-            // Configura a URL de forma segura e tenta reproduzir
+            // Executa a reprodução inicial de forma totalmente segura
             if (CONFIG.musicaUrl) {
-                audio.src = CONFIG.musicaUrl;
-                audio.load();
                 audio.play().then(() => {
                     isPlaying = true;
                     const icon = document.getElementById('music-icon');
@@ -474,7 +483,8 @@
                         lucide.createIcons();
                     }
                 }).catch(err => {
-                    console.warn("A reprodução automática de áudio foi impedida ou formato não suportado:", err);
+                    console.warn("A reprodução automática de áudio foi impedida pelo navegador:", err);
+                    isPlaying = false;
                 });
             }
         }
